@@ -1,0 +1,62 @@
+// {
+//     "configurations": [
+//         {
+//             "name": "C/C++: g++-9 生成活动文件",
+//             "type": "cppdbg",
+//             "request": "launch",
+//             "program": "${fileDirname}/${fileBasenameNoExtension}",
+//             "args": [
+//             ],
+//             "stopAtEntry": false,
+//             "cwd": "${fileDirname}",
+//             "environment": [],
+//             "externalConsole": false,
+//             "MIMode": "gdb",
+//             "setupCommands": [
+//                 {
+//                     "description": "为 gdb 启用整齐打印",
+//                     "text": "-enable-pretty-printing",
+//                     "ignoreFailures": true
+//                 },
+//                 {
+//                     "description": "将反汇编风格设置为 Intel",
+//                     "text": "-gdb-set disassembly-flavor intel",
+//                     "ignoreFailures": true
+//                 }
+//             ],
+//             "preLaunchTask": "cppbuildcuda",		//要和 task.json的label字段一致
+//             "miDebuggerPath": "/usr/bin/gdb",
+//             //下面这行命令可以去除Vscode中编译后出现 [1]+   Done....  的提示
+//             "miDebuggerArgs": "-q -ex quit; wait() { fg >/dev/null; }; /usr/bin/gdb -q --interpreter=mi"
+//         }
+//     ],
+//     "version": "2.0.0"
+// }
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/CPPTemplate", // 指定可执行文件路径
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false, // 使用内置终端或外部终端运行程序
+            "MIMode": "gdb", // 使用 GDB 作为调试器（对于 Linux 或 WSL）
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build", // 在启动前自动执行构建任务
+            "miDebuggerPath": "/usr/bin/gdb", // 如果需要指定 GDB 路径，可以添加此项（对于 Linux 或 WSL）
+            //  下面这行命令可以去除Vscode中编译后出现 [1]+   Done....  的提示
+            "miDebuggerArgs": "-q -ex quit; wait() { fg >/dev/null; }; /usr/bin/gdb -q --interpreter=mi"
+        }
+    ]
+}
