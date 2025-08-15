@@ -1,37 +1,5 @@
 {
     "tasks": [
-        // {
-        //     "type": "cppbuild",
-        //     "label": "cppbuildcuda",
-        //     "command": "/usr/bin/g++",
-        //     "args": [
-        //         "-fdiagnostics-color=always",
-        //         "-g",
-        //         "${file}",
-        //         "-o",
-        //         "${fileDirname}/${fileBasenameNoExtension}",
-        //         "-lpthread",
-        //         "-I/usr/local/opencv/include/opencv4",
-        //         "-L/usr/local/opencv/lib",
-        //         // "-lopencv",
-        //         "-ltorch_cuda","-lc10",
-        //         "-I/usr/local/libtorch/include",
-        //         "-L/usr/local/libtorch/lib",
-        //         // "-ltorch",
-        //         "-std=c++17",
-        //     ],
-        //     "options": {
-        //         "cwd": "${fileDirname}"
-        //     },
-        //     "problemMatcher": [
-        //         "$gcc"
-        //     ],
-        //     "group": {
-        //         "kind": "build",
-        //         "isDefault": true
-        //     },
-        //     "detail": "调试器生成的任务。"
-        // },
         {
             "label": "build",
             "type": "shell",

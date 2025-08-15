@@ -1,37 +1,4 @@
-// {
-//     "configurations": [
-//         {
-//             "name": "C/C++: g++-9 生成活动文件",
-//             "type": "cppdbg",
-//             "request": "launch",
-//             "program": "${fileDirname}/${fileBasenameNoExtension}",
-//             "args": [
-//             ],
-//             "stopAtEntry": false,
-//             "cwd": "${fileDirname}",
-//             "environment": [],
-//             "externalConsole": false,
-//             "MIMode": "gdb",
-//             "setupCommands": [
-//                 {
-//                     "description": "为 gdb 启用整齐打印",
-//                     "text": "-enable-pretty-printing",
-//                     "ignoreFailures": true
-//                 },
-//                 {
-//                     "description": "将反汇编风格设置为 Intel",
-//                     "text": "-gdb-set disassembly-flavor intel",
-//                     "ignoreFailures": true
-//                 }
-//             ],
-//             "preLaunchTask": "cppbuildcuda",		//要和 task.json的label字段一致
-//             "miDebuggerPath": "/usr/bin/gdb",
-//             //下面这行命令可以去除Vscode中编译后出现 [1]+   Done....  的提示
-//             "miDebuggerArgs": "-q -ex quit; wait() { fg >/dev/null; }; /usr/bin/gdb -q --interpreter=mi"
-//         }
-//     ],
-//     "version": "2.0.0"
-// }
+
 {
     "version": "0.2.0",
     "configurations": [

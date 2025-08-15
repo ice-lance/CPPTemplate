@@ -1,0 +1,7 @@
+#pragma once
+
+#include <string>
+
+constexpr const char* APP_NAME = "@PROJECT_NAME@";
+constexpr const char* APP_VERSION = "@PROJECT_VERSION@";
+const std::string BUILD_TIMESTAMP = __TIMESTAMP__;
