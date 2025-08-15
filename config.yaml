@@ -1,0 +1,13 @@
+# 项目名称
+name: cppprojectname
+
+# 配置文件版本号
+version: 2
+
+# 身份唯一标识符（不要改）
+id: d24391b2dc714fe6a11e97712390483d
+
+# API Http服务器
+http_api:
+  ip: 0.0.0.0 # API服务器IP
+  port: 8080 # API服务器端口
