@@ -24,9 +24,10 @@ int main(int argc, char *argv[])
     try
     {
         // 解析命令行参数
-        RuntimeConfig config = parse_command_line(argc, argv);
+        auto options = parse_command_line(argc, argv);
 
-        if (config.show_help)
+        // 如果用户请求了帮助或版本信息，直接退出
+        if (options.show_help || options.show_version)
         {
             return 0;
         }
@@ -37,9 +38,12 @@ int main(int argc, char *argv[])
         // 初始化日志系统
         auto logger = initialize_logging_system();
 
+        // 加载配置文件
+        RuntimeConfig config = load_configuration(options.config_path);
+        
         // 创建 HTTP 服务器
         httplib::Server http_server;
-        setup_http_server(http_server,config);
+        setup_http_server(http_server, config);
 
         // 显示系统信息
         display_system_info();

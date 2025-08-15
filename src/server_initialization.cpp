@@ -28,7 +28,7 @@ const std::string BUILD_TYPE =
 void printVersionInfo()
 {
     std::cout << SOFTWARE_NAME << " v" << VERSION << "\n";
-    std::cout << "  for Financial Management\n\n";
+    std::cout << " for Financial Management\n\n";
 
     std::cout << "Version Information:\n";
     std::cout << "  Core Version:    " << VERSION << "\n";
@@ -40,7 +40,7 @@ void printVersionInfo()
 
     std::cout << "System Capabilities:\n";
 
-    std::cout << "Copyright © 2024  Systems Ltd.\n";
+    std::cout << "Copyright © 2024   Systems Ltd.\n";
     std::cout << "License: MIT Open Source License\n";
     std::cout << "Website: https://hdxx.com\n";
 }
@@ -55,11 +55,29 @@ RuntimeConfig RuntimeConfig::fromServerConfig(const ServerConfig &config)
     return runtime;
 }
 
-// 修改parse_command_line函数
-RuntimeConfig parse_command_line(int argc, char *argv[])
+// 新添加的配置文件加载函数
+RuntimeConfig load_configuration(const std::string& config_path)
 {
     RuntimeConfig config;
-    std::string config_path = "config.yaml"; // 默认配置文件路径
+    try
+    {
+        ServerConfig appConfig = ConfigManager::loadFromFile(config_path);
+        config = RuntimeConfig::fromServerConfig(appConfig);
+        SPDLOG_INFO("成功加载配置文件: {}", config_path);
+    }
+    catch (const std::exception &e)
+    {
+        SPDLOG_ERROR("配置文件加载失败: {}", e.what());
+        SPDLOG_WARN("使用默认配置");
+    }
+    return config;
+}
+
+
+CommandLineOptions parse_command_line(int argc, char *argv[])
+{
+    CommandLineOptions options;
+    options.config_path = "config.yaml"; // 默认配置文件路径
 
     for (int i = 1; i < argc; i++)
     {
@@ -67,7 +85,7 @@ RuntimeConfig parse_command_line(int argc, char *argv[])
         if (arg == "--version")
         {
             printVersionInfo();
-            config.show_help = true;
+            options.show_version = true;
         }
         else if (arg == "-h" || arg == "--help")
         {
@@ -76,42 +94,26 @@ RuntimeConfig parse_command_line(int argc, char *argv[])
             std::cout << "  --version        显示版本信息" << std::endl;
             std::cout << "  -c, --config <路径>  指定配置文件 (默认: config.yaml)" << std::endl;
             std::cout << "  -h, --help           显示帮助信息" << std::endl;
-            config.show_help = true;
+            options.show_help = true;
         }
         else if ((arg == "-c" || arg == "--config") && i + 1 < argc)
         {
-            config_path = argv[++i];
+            options.config_path = argv[++i];
         }
     }
 
-    // 加载配置文件
-    if (!config.show_help)
-    {
-        try
-        {
-            ServerConfig appConfig = ConfigManager::loadFromFile(config_path);
-            config = RuntimeConfig::fromServerConfig(appConfig);
-            SPDLOG_INFO("成功加载配置文件: {}", config_path);
-        }
-        catch (const std::exception &e)
-        {
-            SPDLOG_ERROR("配置文件加载失败: {}", e.what());
-            SPDLOG_WARN("使用默认配置");
-        }
-    }
-
-    return config;
+    return options;
 }
 
 void printBanner()
 {
     std::cout << R"(
 
-
+                                                                                                            
     )" << std::endl;
 
-    std::cout << "  v1.2" << std::endl;
-    std::cout << "===========================" << std::endl;
+    std::cout << "   Server v1.2" << std::endl;
+    std::cout << "==============================" << std::endl;
 }
 
 // 使用结构体封装状态

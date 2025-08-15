@@ -19,8 +19,14 @@ struct RuntimeConfig {
     // 从主配置加载
     static RuntimeConfig fromServerConfig(const ServerConfig& config);
 };
+struct CommandLineOptions {
+    std::string config_path = "config.yaml";  // 配置文件路径
+    bool show_help = false;                   // 是否显示帮助
+    bool show_version = false;                // 是否显示版本信息
+};
 
-RuntimeConfig parse_command_line(int argc, char* argv[]);
+RuntimeConfig load_configuration(const std::string& config_path);
+CommandLineOptions parse_command_line(int argc, char* argv[]);
 void printVersionInfo();
 void printBanner();
 void setup_http_server(httplib::Server& server, const RuntimeConfig& config);
