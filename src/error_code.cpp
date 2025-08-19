@@ -28,7 +28,8 @@ static const std::unordered_map<ErrorCode, std::string> errorMessages = {
     // ============= 系统错误 =============
     {ErrorCode::SYSTEM_ERROR, "系统错误"},
     {ErrorCode::MEMORY_ALLOC_FAILED, "内存分配失败"},
-    {ErrorCode::FILE_IO_ERROR, "文件I/O错误"}};
+    {ErrorCode::FILE_IO_ERROR, "文件I/O错误"},
+    {ErrorCode::INTERNAL_ERROR, "服务器信息不可用"}};
 
 /**
  * @brief 错误码到HTTP状态码的全局映射表
@@ -61,7 +62,8 @@ static const std::unordered_map<ErrorCode, int> httpStatusCodes = {
     // ============= 系统错误 =============
     {ErrorCode::SYSTEM_ERROR, 500},        // 服务器内部错误
     {ErrorCode::MEMORY_ALLOC_FAILED, 500}, // 服务器内部错误
-    {ErrorCode::FILE_IO_ERROR, 500}        // 服务器内部错误
+    {ErrorCode::FILE_IO_ERROR, 500},        // 服务器内部错误
+    {ErrorCode::INTERNAL_ERROR, 500}        // 服务器内部错误
 };
 
 /**

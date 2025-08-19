@@ -33,7 +33,7 @@ include_directories(
 )
 
 # 源文件
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "protocols/*.cpp")
 
 
 # 生成可执行文件
@@ -45,11 +45,19 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     APP_VERSION="${PROJECT_VERSION}"
 )
 
+# 添加库搜索路径（确保路径正确）
+link_directories(${CMAKE_SOURCE_DIR}/libs)
 
 # 将库路径添加到特定目标
-target_link_libraries(${PROJECT_NAME}
-pthread ssl  crypto  ixwebsocket z stdc++fs yaml-cpp
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CANCMD_LIB})
+target_link_libraries(${PROJECT_NAME} PUBLIC
+pthread ixwebsocket z ssl crypto yaml-cpp uuid
 )
+
+
+# 4. 确保运行时能找到 .so 文件
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "\$ORIGIN:\$ORIGIN/../libs")
 
 # 安装目标
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

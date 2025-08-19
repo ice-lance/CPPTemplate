@@ -1,7 +1,7 @@
 #pragma once
 #include <httplib.h>
 #include <string>
-#include "ServerConfig.h" // 包含新的配置头文件
+#include "ConfigManager.h"
 
 struct RequestData
 {
@@ -17,7 +17,7 @@ struct RuntimeConfig {
     bool show_help = false;
     
     // 从主配置加载
-    static RuntimeConfig fromServerConfig(const ServerConfig& config);
+    static RuntimeConfig fromServerConfig(const AppConfig& config);
 };
 struct CommandLineOptions {
     std::string config_path = "config.yaml";  // 配置文件路径
@@ -25,7 +25,7 @@ struct CommandLineOptions {
     bool show_version = false;                // 是否显示版本信息
 };
 
-RuntimeConfig load_configuration(const std::string& config_path);
+std::pair<AppConfig,  RuntimeConfig> load_configuration(const std::string &config_path);
 CommandLineOptions parse_command_line(int argc, char* argv[]);
 void printVersionInfo();
 void printBanner();

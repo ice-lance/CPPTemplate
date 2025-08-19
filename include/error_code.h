@@ -30,7 +30,6 @@ enum class ErrorCode
     INVALID_DATA = 105,            ///< 数据格式不符合要求或校验失败
     RESOURCE_ALREADY_EXISTS = 106, ///< 创建资源时发生冲突（资源已存在）
 
-
     // ============= 网络相关 (500-599) =============
     NETWORK_ERROR = 500,          ///< 网络通信故障（连接超时/中断）
     API_ENDPOINT_NOT_FOUND = 501, ///< 请求的API端点不存在或已停用
@@ -38,7 +37,8 @@ enum class ErrorCode
     // ============= 系统错误 (600-699) =============
     SYSTEM_ERROR = 600,        ///< 操作系统级未分类错误
     MEMORY_ALLOC_FAILED = 601, ///< 内存分配失败（资源耗尽）
-    FILE_IO_ERROR = 602        ///< 文件读写失败（权限/磁盘损坏）
+    FILE_IO_ERROR = 602,       ///< 文件读写失败（权限/磁盘损坏）
+    INTERNAL_ERROR = 603       ///< 服务器信息不可用
 };
 
 /**

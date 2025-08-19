@@ -5,12 +5,11 @@
 #include "utils.hpp"
 #include "json.hpp"
 #include <api_handler.h>
-#include "ServerConfig.h"
 
 extern volatile sig_atomic_t g_running;
 
 // 版本信息常量
-const std::string SOFTWARE_NAME = "";
+const std::string SOFTWARE_NAME = "ProtoFlow_Nexus";
 const std::string VERSION = "1.3.0";
 const std::string PROTOCOL_VERSION = "2";
 const std::string DB_SCHEMA_VERSION = "v5";
@@ -28,7 +27,7 @@ const std::string BUILD_TYPE =
 void printVersionInfo()
 {
     std::cout << SOFTWARE_NAME << " v" << VERSION << "\n";
-    std::cout << " for Financial Management\n\n";
+    std::cout << "ProtoFlow Nexus for Financial Management\n\n";
 
     std::cout << "Version Information:\n";
     std::cout << "  Core Version:    " << VERSION << "\n";
@@ -40,28 +39,29 @@ void printVersionInfo()
 
     std::cout << "System Capabilities:\n";
 
-    std::cout << "Copyright © 2024   Systems Ltd.\n";
+    std::cout << "Copyright © 2024 ProtoFlow_Nexus Systems Ltd.\n";
     std::cout << "License: MIT Open Source License\n";
     std::cout << "Website: https://hdxx.com\n";
 }
 
 // 从主配置创建运行配置
-RuntimeConfig RuntimeConfig::fromServerConfig(const ServerConfig &config)
+RuntimeConfig RuntimeConfig::fromServerConfig(const AppConfig &config)
 {
     RuntimeConfig runtime;
-    runtime.ip = config.http_api.ip;
-    runtime.port = config.http_api.port;
+    runtime.ip = config.apiHttp.ip;
+    runtime.port = config.apiHttp.port;
     // 可以在这里添加其他字段的映射
     return runtime;
 }
 
 // 新添加的配置文件加载函数
-RuntimeConfig load_configuration(const std::string& config_path)
+std::pair<AppConfig, RuntimeConfig> load_configuration(const std::string &config_path)
 {
     RuntimeConfig config;
+    AppConfig appConfig;
     try
     {
-        ServerConfig appConfig = ConfigManager::loadFromFile(config_path);
+        appConfig = ConfigManager::loadFromFile(config_path);
         config = RuntimeConfig::fromServerConfig(appConfig);
         SPDLOG_INFO("成功加载配置文件: {}", config_path);
     }
@@ -70,9 +70,8 @@ RuntimeConfig load_configuration(const std::string& config_path)
         SPDLOG_ERROR("配置文件加载失败: {}", e.what());
         SPDLOG_WARN("使用默认配置");
     }
-    return config;
+    return {appConfig,config};
 }
-
 
 CommandLineOptions parse_command_line(int argc, char *argv[])
 {
@@ -108,11 +107,16 @@ CommandLineOptions parse_command_line(int argc, char *argv[])
 void printBanner()
 {
     std::cout << R"(
-
+  _____                   _             ______   _                        _   _
+ |  __ \                 | |           |  ____| | |                      | \ | |
+ | |__) |  _ __    ___   | |_    ___   | |__    | |   ___   __      __   |  \| |   ___  __  __  _   _   ___
+ |  ___/  | '__|  / _ \  | __|  / _ \  |  __|   | |  / _ \  \ \ /\ / /   | . ` |  / _ \ \ \/ / | | | | / __|
+ | |      | |    | (_) | | |_  | (_) | | |      | | | (_) |  \ V  V /    | |\  | |  __/  >  <  | |_| | \__ \
+ |_|      |_|     \___/   \__|  \___/  |_|      |_|  \___/    \_/\_/     |_| \_|  \___| /_/\_\  \__,_| |___/
                                                                                                             
     )" << std::endl;
 
-    std::cout << "   Server v1.2" << std::endl;
+    std::cout << " ProtoFlow Nexus Server v1.2" << std::endl;
     std::cout << "==============================" << std::endl;
 }
 
