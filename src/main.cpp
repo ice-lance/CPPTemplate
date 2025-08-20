@@ -1,4 +1,3 @@
-
 // main.cpp
 #include "server_initialization.h"
 #include "logging_system.h"
@@ -38,9 +37,9 @@ int main(int argc, char *argv[])
         // 初始化日志系统
         auto logger = initialize_logging_system();
 
-        // 加载配置文件
-        RuntimeConfig config = load_configuration(options.config_path);
-        
+        // 加载配置文件 - 修改这里处理返回的pair
+        auto [appConfig, config] = load_configuration(options.config_path);
+
         // 创建 HTTP 服务器
         httplib::Server http_server;
         setup_http_server(http_server, config);

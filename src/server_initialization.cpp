@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "json.hpp"
 #include <api_handler.h>
+#include "ConfigManager.h"
 
 extern volatile sig_atomic_t g_running;
 
@@ -54,23 +55,30 @@ RuntimeConfig RuntimeConfig::fromServerConfig(const AppConfig &config)
     return runtime;
 }
 
-// 新添加的配置文件加载函数
 std::pair<AppConfig, RuntimeConfig> load_configuration(const std::string &config_path)
 {
-    RuntimeConfig config;
+    RuntimeConfig runtimeConfig;
     AppConfig appConfig;
     try
     {
-        appConfig = ConfigManager::loadFromFile(config_path);
-        config = RuntimeConfig::fromServerConfig(appConfig);
+        // 使用 ConfigManager 的静态方法加载配置 - 更新为新的方法名
+        appConfig = ConfigManager::loadConfigFromFile(config_path);
+        runtimeConfig = RuntimeConfig::fromServerConfig(appConfig);
         SPDLOG_INFO("成功加载配置文件: {}", config_path);
     }
     catch (const std::exception &e)
     {
         SPDLOG_ERROR("配置文件加载失败: {}", e.what());
         SPDLOG_WARN("使用默认配置");
+        // 设置默认配置
+        appConfig.name = "cppprojectname";
+        appConfig.version = 2;
+        appConfig.id = "d24391b2dc714fe6a11e97712390483d";
+        appConfig.apiHttp.ip = "0.0.0.0";
+        appConfig.apiHttp.port = 8080;
+        runtimeConfig = RuntimeConfig::fromServerConfig(appConfig);
     }
-    return {appConfig,config};
+    return {appConfig, runtimeConfig};
 }
 
 CommandLineOptions parse_command_line(int argc, char *argv[])

@@ -1,87 +1,99 @@
-#include "ServerConfig.h"
+#include "ConfigManager.h"
 #include <fstream>
-#include <stdexcept>
+#include <iostream>
 
-using namespace std;
-
-// HTTP API配置转换为JSON
-nl::json HttpApiConfig::toJson() const
-{
-    return nl::json{
-        {"ip", ip},
-        {"port", port}};
-}
-
-// 主配置转换为JSON
-nl::json ServerConfig::toJson() const
-{
-    return nl::json{
-        {"name", name},
-        {"version", version},
-        {"id", id},
-        {"http_api", http_api.toJson()}};
-}
-
-// 从文件加载配置
-ServerConfig ConfigManager::loadFromFile(const string &filepath)
+bool ConfigManager::loadFromFile(const std::string &filename)
 {
     try
     {
-        YAML::Node config = YAML::LoadFile(filepath);
-        return parseConfig(config);
+        m_rootNode = YAML::LoadFile(filename);
+        return true;
     }
     catch (const YAML::Exception &e)
     {
-        throw runtime_error("YAML解析错误: " + string(e.what()));
-    }
-    catch (const ifstream::failure &e)
-    {
-        throw runtime_error("文件错误: " + string(e.what()));
+        std::cerr << "Error loading YAML file: " << e.what() << std::endl;
+        return false;
     }
 }
 
-// 从字符串加载配置
-ServerConfig ConfigManager::loadFromString(const string &content)
+bool ConfigManager::saveToFile(const std::string &filename) const
 {
     try
     {
-        YAML::Node config = YAML::Load(content);
-        return parseConfig(config);
+        std::ofstream fout(filename);
+        fout << m_rootNode;
+        fout.close();
+        return true;
     }
     catch (const YAML::Exception &e)
     {
-        throw runtime_error("YAML解析错误: " + string(e.what()));
+        std::cerr << "Error saving YAML file: " << e.what() << std::endl;
+        return false;
     }
 }
 
-// 配置转换为JSON
-nl::json ConfigManager::toJson(const ServerConfig &config)
+AppConfig ConfigManager::getAsAppConfig() const
 {
-    return config.toJson();
-}
+    AppConfig config;
 
-// 解析YAML配置
-ServerConfig ConfigManager::parseConfig(const YAML::Node &config)
-{
-    ServerConfig cfg;
-
-    // 解析顶层字段
-    if (config["name"])
-        cfg.name = config["name"].as<string>();
-    if (config["version"])
-        cfg.version = config["version"].as<int>();
-    if (config["id"])
-        cfg.id = config["id"].as<string>();
-
-    // 解析HTTP API配置
-    if (config["http_api"])
+    try
     {
-        const YAML::Node &http = config["http_api"];
-        if (http["ip"])
-            cfg.http_api.ip = http["ip"].as<string>();
-        if (http["port"])
-            cfg.http_api.port = http["port"].as<int>();
+        if (m_rootNode["name"])
+            config.name = m_rootNode["name"].as<std::string>();
+        if (m_rootNode["version"])
+            config.version = m_rootNode["version"].as<int>();
+        if (m_rootNode["id"])
+            config.id = m_rootNode["id"].as<std::string>();
+
+        // 注意：这里从 http_api 改为 apiHttp
+        if (m_rootNode["http_api"])
+        {
+            if (m_rootNode["http_api"]["ip"])
+                config.apiHttp.ip = m_rootNode["http_api"]["ip"].as<std::string>();
+            if (m_rootNode["http_api"]["port"])
+                config.apiHttp.port = m_rootNode["http_api"]["port"].as<int>();
+        }
+    }
+    catch (const YAML::Exception &e)
+    {
+        std::cerr << "Error converting YAML node: " << e.what() << std::endl;
     }
 
-    return cfg;
+    return config;
+}
+
+void ConfigManager::setFromAppConfig(const AppConfig &config)
+{
+    try
+    {
+        m_rootNode["name"] = config.name;
+        m_rootNode["version"] = config.version;
+        m_rootNode["id"] = config.id;
+
+        // 注意：这里从 http_api 改为 apiHttp
+        m_rootNode["http_api"]["ip"] = config.apiHttp.ip;
+        m_rootNode["http_api"]["port"] = config.apiHttp.port;
+    }
+    catch (const YAML::Exception &e)
+    {
+        std::cerr << "Error creating YAML node: " << e.what() << std::endl;
+    }
+}
+
+// 静态方法实现 - 重命名为 loadConfigFromFile
+AppConfig ConfigManager::loadConfigFromFile(const std::string &filename)
+{
+    ConfigManager manager;
+    if (manager.loadFromFile(filename))
+    {
+        return manager.getAsAppConfig();
+    }
+    // 返回默认配置
+    AppConfig defaultConfig;
+    defaultConfig.name = "cppprojectname";
+    defaultConfig.version = 2;
+    defaultConfig.id = "d24391b2dc714fe6a11e97712390483d";
+    defaultConfig.apiHttp.ip = "0.0.0.0";
+    defaultConfig.apiHttp.port = 8080;
+    return defaultConfig;
 }
