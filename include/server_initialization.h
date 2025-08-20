@@ -2,6 +2,7 @@
 #include <httplib.h>
 #include <string>
 #include "ConfigManager.h"
+#include "ConfigManager.hpp"
 
 struct RequestData
 {

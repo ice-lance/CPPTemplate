@@ -2,6 +2,6 @@
 
 #include <string>
 
-constexpr const char* APP_NAME = "@PROJECT_NAME@";
-constexpr const char* APP_VERSION = "@PROJECT_VERSION@";
+constexpr const char* APP_NAME = "CodecForge";
+constexpr const char* APP_VERSION = "1.0.0";
 const std::string BUILD_TIMESTAMP = __TIMESTAMP__;
